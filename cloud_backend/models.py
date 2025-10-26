@@ -31,5 +31,5 @@ class DetectionOut(DetectionBase):
     image_path: str
 
     class Config:
-        orm_mode = True # Use orm_mode for Pydantic v1
-        # from_attributes = True # Use this if you are on Pydantic v2
+        from_attributes = True
+        

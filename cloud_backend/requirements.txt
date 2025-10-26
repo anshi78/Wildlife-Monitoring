@@ -7,3 +7,4 @@ requests
 schedule
 opencv-python
 ultralytics
+email-validator
