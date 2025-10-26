@@ -8,3 +8,4 @@ schedule
 opencv-python
 ultralytics
 email-validator
+python-multipart
