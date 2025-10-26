@@ -25,7 +25,7 @@ models.Base.metadata.create_all(bind=database.engine)
 
 # --- FastAPI app & CORS ---
 app = FastAPI(title="Wildlife Monitoring API")
-origins = ["http://localhost:3000", "http://127.0.0.1:3000" ,"https://wildlife-monitoring.vercel.app/"] 
+origins = ["http://localhost:3000", "http://127.0.0.1:3000" ,"https://wildlife-monitoring.vercel.app"] 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
