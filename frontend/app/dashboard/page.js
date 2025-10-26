@@ -17,7 +17,7 @@ export default function DashboardPage() {
   const API_KEY = "MySuperSecretKey2025";
   // You can still use .env for the URL if you create a .env.local file
   // Or just hardcode it for now:
-  const API_URL = "http://127.0.0.1:8000";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   // Fetch detections and live frame
   useEffect(() => {
