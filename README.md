@@ -190,6 +190,4 @@ The system can send email alerts when specific species are detected (currently l
 
 
 
-## License
 
-Do whatever you want with it. If you use it for actual conservation work, I'd love to hear about it.
