@@ -188,17 +188,7 @@ The system can send email alerts when specific species are detected (currently l
 
 ---
 
-## Things I'd Improve
 
-- [x] Replace the generic COCO model with a fine-tuned wildlife model
-- [x] Add a proper image storage solution (Supabase/S3) instead of saving to disk
-- [x] Add detection history charts and analytics to the dashboard
-- [ ] Add GPS coordinates from the device instead of hardcoding location
-- [ ] Use WebSockets instead of polling on the dashboard
-- [ ] Implement proper logging instead of print statements everywhere
-- [ ] Night vision / IR camera support for nocturnal monitoring
-
----
 
 ## License
 
