@@ -2,7 +2,8 @@ import cv2
 import os
 from datetime import datetime
 from ultralytics import YOLO
-from edge_device import config, offline_storage
+import config
+import offline_storage
 
 # Ensure directories and DB exist
 os.makedirs(config.IMG_DIR, exist_ok=True)

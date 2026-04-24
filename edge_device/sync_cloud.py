@@ -2,7 +2,8 @@ import requests
 import time
 import schedule
 import os
-from edge_device import config, offline_storage
+import config
+import offline_storage
 
 def sync_detections_to_cloud():
     """Fetches unsynced detections and uploads them to the cloud backend."""
@@ -68,10 +69,9 @@ def sync_detections_to_cloud():
             print(f"An unexpected error occurred for ID {detection_id}: {e}")
             
 # --- Schedule the sync ---
-schedule.every(5).minutes.do(sync_detections_to_cloud)
-# schedule.every(30).seconds.do(sync_detections_to_cloud) # For faster testing
+schedule.every(5).seconds.do(sync_detections_to_cloud)
 
-print("Cloud sync service started. Will sync every 5 minutes.")
+print("Cloud sync service started. Will sync every 5 seconds (fast testing mode).")
 sync_detections_to_cloud() # Run once on startup
 
 while True:

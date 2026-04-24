@@ -1,5 +1,5 @@
 import sqlite3
-from edge_device import config
+import config
 
 # --- Database Initialization ---
 def init_db():

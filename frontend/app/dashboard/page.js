@@ -3,6 +3,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 
 export default function DashboardPage() {
   const [detections, setDetections] = useState([]);
@@ -23,11 +24,20 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
         const [detectionsRes, liveFrameRes] = await Promise.all([
-          // Corrected: Added trailing slash
-          fetch(`${API_URL}/detections/`, { headers: { 'X-API-KEY': API_KEY } }),
-          fetch(`${API_URL}/live-frame?t=${Date.now()}`), 
+          fetch(`${API_URL}/detections/`, { 
+            headers: { 'X-API-KEY': API_KEY },
+            signal: controller.signal 
+          }),
+          fetch(`${API_URL}/live-frame?t=${Date.now()}`, {
+            signal: controller.signal
+          }), 
         ]);
+        
+        clearTimeout(timeoutId);
 
         if (detectionsRes.ok) {
           setDetections(await detectionsRes.json());
@@ -47,7 +57,11 @@ export default function DashboardPage() {
         
         setIsOnline(true);
       } catch (err) {
-        console.error('Fetch error:', err);
+        if (err.name === 'AbortError') {
+          console.log('Fetch timed out (Backend might be offline or sleeping)');
+        } else {
+          console.error('Fetch error:', err);
+        }
         setIsOnline(false);
       } finally {
         setIsLoading(false);
@@ -81,6 +95,20 @@ export default function DashboardPage() {
     deer: '🦌', boar: '🐗', elephant: '🐘', monkey: '🐒', leopard: '🐆',
     person: '🚶', bird: '🐦', // etc.
   };
+
+  // --- Chart Data Processing ---
+  const timelineDataMap = [...detections].reverse().reduce((acc, { timestamp }) => {
+    const date = new Date(timestamp);
+    const time = `${date.getHours().toString().padStart(2, '0')}:00`; 
+    acc[time] = (acc[time] || 0) + 1;
+    return acc;
+  }, {});
+  const timelineData = Object.keys(timelineDataMap).map(time => ({ time, count: timelineDataMap[time] }));
+
+  const barChartData = Object.entries(speciesCounts).map(([name, count]) => ({
+    name: name.charAt(0).toUpperCase() + name.slice(1),
+    count
+  }));
 
   // --- Loading screen ---
   if (isLoading && !detections.length) {
@@ -166,6 +194,43 @@ export default function DashboardPage() {
               <div className="stat-accent"></div>
               <div className="stat-number last-detection">{lastDetection}</div>
               <div className="stat-label">Last Detection</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Analytics Section */}
+        <div className="analytics-grid">
+          <div className="glass-card analytics-card">
+            <h3 className="analytics-title">Detection Activity (Over Time)</h3>
+            <div className="chart-container">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={timelineData}>
+                  <defs>
+                    <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#22c55e" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="time" stroke="#94a3b8" />
+                  <YAxis stroke="#94a3b8" allowDecimals={false} />
+                  <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff' }} />
+                  <Area type="monotone" dataKey="count" stroke="#22c55e" fillOpacity={1} fill="url(#colorCount)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          
+          <div className="glass-card analytics-card">
+            <h3 className="analytics-title">Species Distribution</h3>
+            <div className="chart-container">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={barChartData}>
+                  <XAxis dataKey="name" stroke="#94a3b8" />
+                  <YAxis stroke="#94a3b8" allowDecimals={false} />
+                  <Tooltip cursor={{fill: 'rgba(255,255,255,0.05)'}} contentStyle={{ backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff' }} />
+                  <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>

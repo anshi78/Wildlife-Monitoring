@@ -29,7 +29,7 @@ body {
 
 /* Dashboard Wrapper */
 .dashboard-wrapper {
-    min-h-screen: 100vh;
+    min-height: 100vh;
     background: #0a0e1a;
     position: relative;
     overflow: hidden;
@@ -247,9 +247,42 @@ body {
 .status-online .status-text {
     color: #22c55e;
 }
-
 .status-offline .status-text {
     color: #ef4444;
+}
+
+/* Analytics Section */
+.analytics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.analytics-card {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.analytics-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chart-container {
+    height: 300px;
+    width: 100%;
+}
+
+@media (max-width: 1024px) {
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Camera Feed */
