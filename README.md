@@ -145,4 +145,4 @@ Running detection in the cloud means every frame travels over a network before y
 
 ---
 
-*Semi-Finalist, Flipkart GRID 7.0 (Top 5% nationally) · Top 10, Grapethon 3.0 National Hackathon*
+
